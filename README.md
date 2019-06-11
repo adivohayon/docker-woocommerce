@@ -1,7 +1,9 @@
-Woocommerce Integration
+Woocommerce Docker
 ===
 
-Woo commerce is a free eCommerce toolkit for WordPress.
+Wordpress with Woocommerce installed.  
+Includes JWT Auth for API access.
+
 
 # Quick Start
 
@@ -11,33 +13,33 @@ Point your browser to `http://127.0.0.1:8080`
 
 
 # Setup
-## Import data 
-	dummy-data.csv
+
+1. `docker-compose build`  
+
+2. `docker-compose up`  
+
+3. Go to: `http://127.0.0.1:8080`
+	* Follow steps to install Wordpress  
+
+4. Go to *Plugins*:
+	* Activate JWT Authentication Plugin
+	* Activate WooCommerce, and install
+
+5. Woocommerce Installation
+	* Follow steps to install Woocommerce
+	* In final step click on *Import Products* - `dumnmy-data.csv`
+
+6. Go to *Settings -> Permalinks*
+	* Select `Post name` and save - This is so that `wp-json` will work properly  
+	* Make sure this link works: `http://127.0.0.1:8080/wp-json`  
 
 
-## WP-JSON
-1. Make sure  pretty permalinks are available
-2. `http://localhost:8080/wp-json` should be available
+# Usage
+## JWT
 
-## Setup JWT Token
-1. `.htaccess` (in root):
-```
-...
-RewriteEngine On
-RewriteCond %{HTTP:Authorization} ^(.*)
-RewriteRule ^(.*) - [E=HTTP_AUTHORIZATION:%1]
-RewriteBase /
-...
-```
+1. **POST** :: `http://127.0.0.1:8080/wp-json/jwt-auth/v1/token`  
 
-2. `wp-config.php` (in root)
-```
-define('JWT_AUTH_SECRET_KEY', 'your-top-secret-key');
-define('JWT_AUTH_CORS_ENABLE', true);
-...
-```
-
-3. POST `http://localhost:8080/wp-json/jwt-auth/v1/token`
+**Request**  
 ```
 	{
 		"username": "wordpress_user",
@@ -45,15 +47,10 @@ define('JWT_AUTH_CORS_ENABLE', true);
 	}
 ```
 
-4. Send token in all headers
+2. Send token in all required requests in headers
 ```
 Authorization: Bearer ey13123oss.....
 ```
 
-License
----
-
-
-MIT
-
-**Free Software, Hell Yeah!**
+## API
+1. **GET** :: `http://localhost:8080/wp-json/wp/v2/users/me`
